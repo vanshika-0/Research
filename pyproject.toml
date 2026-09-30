@@ -28,6 +28,10 @@ dependencies = [
     "requests==2.34.2",
     "tavily-python==0.7.24",
     "uvicorn==0.48.0",
+    "mcp[cli]==1.28.1",
+    "langchain-google-genai>=4.4.0",
+    "langchain-huggingface>=1.2.2",
+    "youtube-transcript-api>=1.2.4",
 ]
 
 [project.scripts]

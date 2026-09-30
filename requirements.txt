@@ -18,3 +18,13 @@ certifi
 airportsdata==20260315
 pycountry==26.2.16
 jinja2==3.1.6
+
+#predefined mcp client hai 
+langchain-mcp-adapters==0.3.0
+
+# use async using this -- use async programing in MCP- allows us to handle nested event loops
+nest_asyncio==1.6.0
+
+# create custom MCP --use mcp 
+mcp==1.28.1
+langchain-google-genai

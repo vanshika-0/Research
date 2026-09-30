@@ -5,7 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+<<<<<<< HEAD
 mcp = FastMCP("Research MCP Server",
+=======
+mcp = FastMCP("Researchmcpserver",
+>>>>>>> de12992 (Initial MCP server)
               host="0.0.0.0",
               # Hosting platforms provide PORT automatically. MCP_PORT
               # remains available for local development.
@@ -29,12 +33,15 @@ except ImportError:
 
 
 
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+>>>>>>> de12992 (Initial MCP server)
 # --------------------------------------------------
 # 1. WEB SEARCH
 # --------------------------------------------------

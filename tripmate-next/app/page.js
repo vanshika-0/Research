@@ -117,22 +117,22 @@ export default function Home() {
   }
 
   return (
-    <main className="page">
-      <header className="masthead">
-        <div className="masthead-inner">
-          <span className="kicker">Research desk</span>
-          <h1>Ask a question, get it sourced.</h1>
-          <p className="subtitle">
+    <main className="min-h-screen bg-[#faf9f6] text-[#1c1b1a] font-sans">
+      <header className="border-b border-[#e2ded3] bg-[#faf9f6]">
+        <div className="mx-auto max-w-[680px] px-6 pb-10 pt-16 max-[600px]:px-5 max-[600px]:pb-8 max-[600px]:pt-11">
+          <span className="font-sans text-[13px] font-semibold tracking-[0.02em] text-[#1f5f5b]">Research desk</span>
+          <h1 className="my-2.5 mb-3.5 max-w-[14ch] font-serif text-[40px] font-semibold leading-[1.15] max-[600px]:text-[30px]">Ask a question, get it sourced.</h1>
+          <p className="m-0 max-w-[46ch] font-serif text-[18px] leading-[1.55] text-[#5c584f]">
             Draws on web sources, academic papers and news, then hands you
             a report you can review before it's final.
           </p>
         </div>
       </header>
 
-      <div className="page-inner">
+      <div className="mx-auto max-w-[680px] px-6 pb-[100px] pt-10 max-[600px]:px-5">
         {/* Search Box */}
-        <section className="query-card">
-          <label className="field-label" htmlFor="query">
+        <section className="border border-[#e2ded3] bg-white p-6">
+          <label className="mb-2 block text-[13px] font-medium text-[#5c584f]" htmlFor="query">
             Your question
           </label>
           <textarea
@@ -142,10 +142,10 @@ export default function Home() {
             onKeyDown={handleKeyDown}
             placeholder="What do you want to understand?"
           />
-          <div className="query-footer">
-            <span className="hint">⌘/Ctrl + Enter to run</span>
+          <div className="mt-3.5 flex items-center justify-between max-[600px]:flex-col max-[600px]:items-stretch max-[600px]:gap-3">
+            <span className="text-[13px] text-[#5c584f]">⌘/Ctrl + Enter to run</span>
             <button
-              className="btn-primary"
+              className="cursor-pointer border border-[#1c1b1a] bg-[#1c1b1a] px-5 py-[11px] text-[14px] font-medium text-[#faf9f6] hover:border-[#1f5f5b] hover:bg-[#1f5f5b] disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-2 focus-visible:outline-[#1f5f5b] focus-visible:outline-offset-2 max-[600px]:w-full"
               onClick={research}
               disabled={loading}
             >
@@ -155,11 +155,11 @@ export default function Home() {
         </section>
 
         {/* Quick Prompts */}
-        <section className="prompts">
+        <section className="mt-5 flex flex-wrap gap-2">
           {QUICK_PROMPTS.map((prompt) => (
             <button
               key={prompt}
-              className="prompt-chip"
+              className="cursor-pointer border border-[#e2ded3] bg-transparent px-3.5 py-2 text-[13px] text-[#5c584f] hover:border-[#1f5f5b] hover:text-[#1f5f5b] disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-2 focus-visible:outline-[#1f5f5b] focus-visible:outline-offset-2"
               onClick={() => setInput(prompt)}
             >
               {prompt}
@@ -169,22 +169,22 @@ export default function Home() {
 
         {/* Error */}
         {error && (
-          <div className="error" role="alert">
-            <span className="error-label">Something went wrong</span>
-            <p>{error}</p>
+          <div className="mt-6 border-l-[3px] border-[#8c2f1f] bg-[#f7eae7] px-4 py-3.5" role="alert">
+            <span className="mb-1 block text-[13px] font-semibold text-[#8c2f1f]">Something went wrong</span>
+            <p className="m-0 text-[14px] text-[#1c1b1a]">{error}</p>
           </div>
         )}
 
         {/* Research Result */}
         {answer && (
-          <article className="result">
-            <div className="result-heading">
-              <span className="kicker">Report</span>
-              <h2>Findings</h2>
+          <article className="mt-12 border-t border-[#e2ded3] pt-8">
+            <div className="">
+              <span className="font-sans text-[13px] font-semibold tracking-[0.02em] text-[#1f5f5b]">Report</span>
+              <h2 className="my-1.5 mb-6 font-serif text-[26px] leading-[1.3]">Findings</h2>
             </div>
 
             <div
-              className="result-body"
+              className="font-serif text-[17px] leading-[1.75] text-[#1c1b1a] [&_h1]:font-serif [&_h1]:leading-[1.3] [&_h2]:font-serif [&_h2]:leading-[1.3] [&_h3]:font-serif [&_h3]:leading-[1.3] [&_p]:mb-[1.2em] [&_a]:text-[#1f5f5b] [&_code]:bg-[#e5efed] [&_code]:px-[5px] [&_code]:py-0.5 [&_code]:text-[0.9em]"
               dangerouslySetInnerHTML={{
                 __html: marked.parse(answer),
               }}
@@ -192,16 +192,16 @@ export default function Home() {
 
             {/* HITL */}
             {requiresApproval && (
-              <div className="approval">
-                <span className="kicker">Needs your review</span>
-                <p className="approval-copy">
+              <div className="mt-10 border-l-[3px] border-[#1f5f5b] bg-[#e5efed] px-6 py-5">
+                <span className="font-sans text-[13px] font-semibold tracking-[0.02em] text-[#1f5f5b]">Needs your review</span>
+                <p className="my-2 mb-4 font-serif text-base text-[#1c1b1a]">
                   {approvalRequest ||
                     "Please review the research report before it's finalized."}
                 </p>
 
-                <div className="approval-actions">
+                <div className="mb-5">
                   <button
-                    className="btn-approve"
+                    className="cursor-pointer border border-[#1f5f5b] bg-[#1f5f5b] px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-[#174a47] disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-2 focus-visible:outline-[#1f5f5b] focus-visible:outline-offset-2"
                     onClick={() => submitReview(true)}
                     disabled={loading}
                   >
@@ -209,17 +209,18 @@ export default function Home() {
                   </button>
                 </div>
 
-                <label className="field-label" htmlFor="feedback">
+                <label className="mb-2 block text-[13px] font-medium text-[#5c584f]" htmlFor="feedback">
                   Or request a revision
                 </label>
                 <textarea
+                  className="mb-1 box-border min-h-[110px] w-full resize-y border border-[#e2ded3] bg-white p-3.5 text-[15px] leading-[1.5] text-[#1c1b1a] outline-none focus:border-[#1f5f5b] focus:ring-2 focus:ring-[#1f5f5b]/20"
                   id="feedback"
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder="What should change?"
                 />
                 <button
-                  className="btn-secondary"
+                  className="mt-3 cursor-pointer border border-[#e2ded3] bg-transparent px-[18px] py-2.5 text-[14px] font-medium text-[#1c1b1a] hover:border-[#1c1b1a] disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-2 focus-visible:outline-[#1f5f5b] focus-visible:outline-offset-2"
                   onClick={() => submitReview(false)}
                   disabled={loading || !feedback.trim()}
                 >
@@ -230,301 +231,6 @@ export default function Home() {
           </article>
         )}
       </div>
-
-      <style jsx global>{`
-        @import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600&display=swap");
-
-        :root {
-          --paper: #faf9f6;
-          --paper-card: #ffffff;
-          --ink: #1c1b1a;
-          --ink-soft: #5c584f;
-          --rule: #e2ded3;
-          --accent: #1f5f5b;
-          --accent-soft: #e5efed;
-          --danger: #8c2f1f;
-          --danger-soft: #f7eae7;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-
-        body {
-          margin: 0;
-          background: var(--paper);
-          color: var(--ink);
-          font-family: "Inter", -apple-system, sans-serif;
-        }
-
-        .page {
-          min-height: 100vh;
-        }
-
-        .masthead {
-          border-bottom: 1px solid var(--rule);
-          background: var(--paper);
-        }
-
-        .masthead-inner {
-          max-width: 680px;
-          margin: 0 auto;
-          padding: 64px 24px 40px;
-        }
-
-        .kicker {
-          font-family: "Inter", sans-serif;
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--accent);
-          letter-spacing: 0.02em;
-        }
-
-        h1 {
-          font-family: "Source Serif 4", Georgia, serif;
-          font-weight: 600;
-          font-size: 40px;
-          line-height: 1.15;
-          margin: 10px 0 14px;
-          max-width: 14ch;
-        }
-
-        .subtitle {
-          font-family: "Source Serif 4", Georgia, serif;
-          font-size: 18px;
-          line-height: 1.55;
-          color: var(--ink-soft);
-          max-width: 46ch;
-          margin: 0;
-        }
-
-        .page-inner {
-          max-width: 680px;
-          margin: 0 auto;
-          padding: 40px 24px 100px;
-        }
-
-        .field-label {
-          display: block;
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--ink-soft);
-          margin-bottom: 8px;
-        }
-
-        .query-card {
-          background: var(--paper-card);
-          border: 1px solid var(--rule);
-          padding: 24px;
-        }
-
-        textarea {
-          width: 100%;
-          min-height: 110px;
-          padding: 14px;
-          box-sizing: border-box;
-          border: 1px solid var(--rule);
-          background: var(--paper);
-          color: var(--ink);
-          font-family: "Inter", sans-serif;
-          font-size: 15px;
-          line-height: 1.5;
-          resize: vertical;
-        }
-
-        textarea:focus,
-        button:focus-visible {
-          outline: 2px solid var(--accent);
-          outline-offset: 2px;
-        }
-
-        .query-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 14px;
-        }
-
-        .hint {
-          font-size: 13px;
-          color: var(--ink-soft);
-        }
-
-        button {
-          font-family: "Inter", sans-serif;
-          cursor: pointer;
-        }
-
-        button:disabled {
-          cursor: not-allowed;
-          opacity: 0.55;
-        }
-
-        .btn-primary {
-          background: var(--ink);
-          color: var(--paper);
-          border: 1px solid var(--ink);
-          padding: 11px 20px;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-          background: var(--accent);
-          border-color: var(--accent);
-        }
-
-        .btn-secondary {
-          margin-top: 12px;
-          background: transparent;
-          color: var(--ink);
-          border: 1px solid var(--rule);
-          padding: 10px 18px;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-          border-color: var(--ink);
-        }
-
-        .btn-approve {
-          background: var(--accent);
-          color: #fff;
-          border: 1px solid var(--accent);
-          padding: 10px 18px;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .btn-approve:hover:not(:disabled) {
-          background: #174a47;
-        }
-
-        .prompts {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin: 20px 0 0;
-        }
-
-        .prompt-chip {
-          background: transparent;
-          border: 1px solid var(--rule);
-          color: var(--ink-soft);
-          padding: 8px 14px;
-          font-size: 13px;
-        }
-
-        .prompt-chip:hover {
-          border-color: var(--accent);
-          color: var(--accent);
-        }
-
-        .error {
-          margin-top: 24px;
-          background: var(--danger-soft);
-          border-left: 3px solid var(--danger);
-          padding: 14px 16px;
-        }
-
-        .error-label {
-          display: block;
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--danger);
-          margin-bottom: 4px;
-        }
-
-        .error p {
-          margin: 0;
-          font-size: 14px;
-          color: var(--ink);
-        }
-
-        .result {
-          margin-top: 48px;
-          border-top: 1px solid var(--rule);
-          padding-top: 32px;
-        }
-
-        .result-heading h2 {
-          font-family: "Source Serif 4", Georgia, serif;
-          font-size: 26px;
-          margin: 6px 0 24px;
-        }
-
-        .result-body {
-          font-family: "Source Serif 4", Georgia, serif;
-          font-size: 17px;
-          line-height: 1.75;
-          color: var(--ink);
-        }
-
-        .result-body :global(h1),
-        .result-body :global(h2),
-        .result-body :global(h3) {
-          font-family: "Source Serif 4", Georgia, serif;
-          line-height: 1.3;
-        }
-
-        .result-body :global(p) {
-          margin: 0 0 1.2em;
-        }
-
-        .result-body :global(a) {
-          color: var(--accent);
-        }
-
-        .result-body :global(code) {
-          background: var(--accent-soft);
-          padding: 2px 5px;
-          font-size: 0.9em;
-        }
-
-        .approval {
-          margin-top: 40px;
-          border-left: 3px solid var(--accent);
-          background: var(--accent-soft);
-          padding: 20px 24px;
-        }
-
-        .approval-copy {
-          font-family: "Source Serif 4", Georgia, serif;
-          font-size: 16px;
-          color: var(--ink);
-          margin: 8px 0 16px;
-        }
-
-        .approval-actions {
-          margin-bottom: 20px;
-        }
-
-        .approval textarea {
-          background: var(--paper-card);
-          margin-bottom: 4px;
-        }
-
-        @media (max-width: 600px) {
-          h1 {
-            font-size: 30px;
-          }
-
-          .masthead-inner {
-            padding: 44px 20px 32px;
-          }
-
-          .query-footer {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
-          }
-
-          .btn-primary {
-            width: 100%;
-          }
-        }
-      `}</style>
     </main>
   );
 

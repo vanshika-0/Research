@@ -522,4 +522,5 @@ export default function Home() {
       `}</style>
     </main>
   );
+
 }

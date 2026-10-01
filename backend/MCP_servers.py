@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+<<<<<<< HEAD:MCP_servers.py
 <<<<<<< HEAD
 mcp = FastMCP("Research MCP Server",
 =======
@@ -17,6 +18,9 @@ mcp = FastMCP("Researchmcpserver",
               stateless_http=True,
               json_response=True,
               )
+=======
+mcp = FastMCP("Researchmcpserver")
+>>>>>>> eb3003b (Organize backend package and update MCP setup):backend/MCP_servers.py
 
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
@@ -359,4 +363,4 @@ def youtube_search(query: str, limit: int = 5):
 # --------------------------------------------------
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    mcp.run()

@@ -29,6 +29,30 @@ export default function Home() {
   const [approvalRequest, setApprovalRequest] = useState("");
   const [feedback, setFeedback] = useState("");
 
+  async function waitForResearch(threadId) {
+    while (true) {
+      const res = await fetch(
+        `${API_ROOT}/api/research/status/${encodeURIComponent(threadId)}`
+      );
+      const data = await res.json();
+
+      if (!res.ok || data.success === false || data.status === "failed") {
+        throw new Error(data.error || "Research failed.");
+      }
+
+      if (data.result) {
+        const result = data.result;
+        setAnswer(result.answer || "");
+        setThreadId(result.thread_id || threadId);
+        setRequiresApproval(result.requires_approval || false);
+        setApprovalRequest(result.approval_request || "");
+        return;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    }
+  }
+
   // -----------------------------
   // Start Research
   // -----------------------------
@@ -57,10 +81,8 @@ export default function Home() {
         throw new Error(data.error || "Research failed.");
       }
 
-      setAnswer(data.answer || "");
       setThreadId(data.thread_id || null);
-      setRequiresApproval(data.requires_approval || false);
-      setApprovalRequest(data.approval_request || "");
+      await waitForResearch(data.thread_id);
     } catch (err) {
       setError(err.message);
     } finally {

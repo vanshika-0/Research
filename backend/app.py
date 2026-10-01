@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 
 import traceback
 import os
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 import uvicorn
 import nest_asyncio
 
@@ -24,6 +26,8 @@ nest_asyncio.apply()
 
 
 app = FastAPI()
+research_executor = ThreadPoolExecutor(max_workers=2)
+research_jobs = {}
 
 
 
@@ -97,24 +101,27 @@ def research_agent(request_data: ResearchRequest):
 
         print("2. User query:", user_message)
 
-        thread_id = request_data.thread_id
+        thread_id = request_data.thread_id or f"user_{uuid.uuid4().hex}"
 
         if thread_id is None:
             print("No thread_id provided. New research thread will be created.")
         else:
             print("Existing thread_id:", thread_id)
 
-        result = run_research_agent(
+        future = research_executor.submit(
+            run_research_agent,
             user_input=user_message,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
-
-        print("3. Research completed")
+        research_jobs[thread_id] = future
 
         return JSONResponse(
+            status_code=202,
             content={
                 "success": True,
-                **result,
+                "thread_id": thread_id,
+                "status": "running",
+                "message": "Research started.",
             }
         )
 
@@ -129,6 +136,52 @@ def research_agent(request_data: ResearchRequest):
                 "success": False,
                 "error": str(e)
             }
+        )
+
+
+@app.get("/api/research/status/{thread_id}")
+def research_status(thread_id: str):
+    future = research_jobs.get(thread_id)
+
+    if future is None:
+        return JSONResponse(
+            status_code=404,
+            content={
+                "success": False,
+                "error": "Research job was not found.",
+            },
+        )
+
+    if not future.done():
+        return {
+            "success": True,
+            "thread_id": thread_id,
+            "status": "running",
+        }
+
+    try:
+        result = future.result()
+        return {
+            "success": True,
+            "thread_id": thread_id,
+            "status": (
+                "waiting_for_approval"
+                if result.get("requires_approval")
+                else "completed"
+            ),
+            "result": result,
+        }
+    except Exception as exc:
+        print("BACKGROUND RESEARCH ERROR:", exc)
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "thread_id": thread_id,
+                "status": "failed",
+                "error": str(exc),
+            },
         )
 
 

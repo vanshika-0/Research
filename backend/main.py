@@ -78,7 +78,7 @@ llm = HuggingFaceEndpoint(
     ),
     task="text-generation",
     huggingfacehub_api_token=HUGGINGFACE_TOKEN,
-    max_new_tokens=512,
+    max_new_tokens=1024,
     temperature=0.7,
 )
 

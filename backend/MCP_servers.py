@@ -84,7 +84,7 @@ def web_search(query: str, max_results: int = 10):
 
 @mcp.tool()
 
-def paper_search(query: str, limit: int = 5):
+def paper_search(query: str, limit: int = 3):
 
     url = "https://api.openalex.org/works"
 
@@ -107,7 +107,7 @@ def paper_search(query: str, limit: int = 5):
         response = requests.get(
             url,
             params=params,
-            timeout=30
+            timeout=10
         )
 
         if not response.ok:
@@ -218,7 +218,7 @@ def news_search(query: str, limit: int = 3):
             url,
             params=params,
             headers=headers,
-            timeout=30
+            timeout=10
         )
 
         if not response.ok:
@@ -293,7 +293,7 @@ def news_search(query: str, limit: int = 3):
 
 
 @mcp.tool()
-def youtube_search(query: str, limit: int = 5):
+def youtube_search(query: str, limit: int = 3):
 
     # 1. Search YouTube
     url = "https://www.googleapis.com/youtube/v3/search"
@@ -310,7 +310,7 @@ def youtube_search(query: str, limit: int = 5):
     response = requests.get(
         url,
         params=params,
-        timeout=30
+        timeout=10
     )
 
     response.raise_for_status()

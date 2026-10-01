@@ -78,7 +78,7 @@ llm = HuggingFaceEndpoint(
     ),
     task="text-generation",
     huggingfacehub_api_token=HUGGINGFACE_TOKEN,
-    max_new_tokens=1024,
+    max_new_tokens=512,
     temperature=0.7,
 )
 
@@ -219,7 +219,7 @@ async def initialize_research_tools():
 
 async def web_mcp_search(
     query: str,
-    limit: int = 5
+    limit: int = 3
 ):
 
     await initialize_research_tools()
@@ -234,7 +234,7 @@ async def web_mcp_search(
 
 async def paper_mcp_search(
     query: str,
-    limit: int = 5
+    limit: int = 3
 ):
 
     await initialize_research_tools()
@@ -249,7 +249,7 @@ async def paper_mcp_search(
 
 async def news_mcp_search(
     query: str,
-    limit: int = 5
+    limit: int = 3
 ):
 
     await initialize_research_tools()
@@ -261,7 +261,7 @@ async def news_mcp_search(
         }
     )
 
-async def youtube_mcp_search(query:str , limit:int=5):
+async def youtube_mcp_search(query:str , limit:int=3):
     await initialize_research_tools()
     return await youtube_search_tool.ainvoke(
         {
@@ -753,7 +753,7 @@ def web_research_agent(state: ResearchState):
         result = run_async(
             web_mcp_search(
                 query,
-                limit=5
+                limit=3
             )
         )
 
@@ -808,7 +808,7 @@ def extract_pdf_text(pdf_url: str) -> str:
     try:
         response = requests.get(
             pdf_url,
-            timeout=30,
+            timeout=15,
             headers={"User-Agent": "Mozilla/5.0"}
         )
 
@@ -948,7 +948,7 @@ def paper_research_agent(state: ResearchState):
         result = run_async(
             paper_mcp_search(
                 query,
-                limit=5
+                limit=3
             )
         )
 
@@ -1195,7 +1195,7 @@ def news_research_agent(
         result = run_async(
             news_mcp_search(
                 query,
-                limit=5
+                limit=3
             )
         )
 
@@ -1381,7 +1381,7 @@ def youtube_research_agent(state: ResearchState):
         result = run_async(
             youtube_mcp_search(
                 query,
-                limit=5
+                limit=3
             )
         )
 
@@ -1869,7 +1869,7 @@ def route_from_supervisor(state: ResearchState):
             "web_research_agent",
             "paper_research_agent",
             "news_research_agent",
-            "youtube_research_agent",
+            # "youtube_research_agent",  # temporarily disabled
         ]
         if agent in selected
     ]
@@ -1881,7 +1881,7 @@ def route_from_supervisor(state: ResearchState):
             "web_research_agent",
             "paper_research_agent",
             "news_research_agent",
-            "youtube_research_agent",
+            # "youtube_research_agent",  # temporarily disabled
         ]
 
     return [

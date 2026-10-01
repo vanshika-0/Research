@@ -10,16 +10,12 @@ import nest_asyncio
 
 from pydantic import BaseModel, Field
 
-try:
-    # Package execution: uvicorn backend.app:app
+if __package__:
+    # Project-root execution: uvicorn backend.app:app
     from .main import run_research_agent, resume_research_agent
-except ImportError:
-    try:
-        # Project-root execution: uvicorn backend.app:app via a top-level import
-        from backend.main import run_research_agent, resume_research_agent
-    except ImportError:
-        # Direct execution from the backend directory: python app.py
-        from backend.main import run_research_agent, resume_research_agent
+else:
+    # Render/direct execution from the backend directory: uvicorn app:app
+    from main import run_research_agent, resume_research_agent
 
 
 load_dotenv()

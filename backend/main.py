@@ -392,6 +392,42 @@ def _prompt_text(value, max_chars: int = 8000):
     )
 
 
+def _decode_tool_result(value):
+    """Unwrap MCP text-content responses into Python data."""
+    current = value
+
+    for _ in range(3):
+        if isinstance(current, dict):
+            if (
+                current.get("type") == "text"
+                and isinstance(current.get("text"), str)
+            ):
+                current = current["text"]
+                continue
+            return current
+
+        if isinstance(current, list):
+            if (
+                len(current) == 1
+                and isinstance(current[0], dict)
+                and current[0].get("type") == "text"
+            ):
+                current = current[0].get("text", "")
+                continue
+            return current
+
+        if isinstance(current, str):
+            try:
+                current = json.loads(current)
+                continue
+            except json.JSONDecodeError:
+                return current
+
+        return current
+
+    return current
+
+
 # =========================================================
 # LLM HELPERS
 # =========================================================
@@ -750,10 +786,12 @@ def web_research_agent(state: ResearchState):
     query = state["user_query"]
 
     try:
-        result = run_async(
-            web_mcp_search(
-                query,
-                limit=3
+        result = _decode_tool_result(
+            run_async(
+                web_mcp_search(
+                    query,
+                    limit=3
+                )
             )
         )
 
@@ -955,10 +993,12 @@ def paper_research_agent(state: ResearchState):
     try:
 
         # Search research papers
-        result = run_async(
-            paper_mcp_search(
-                query,
-                limit=3
+        result = _decode_tool_result(
+            run_async(
+                paper_mcp_search(
+                    query,
+                    limit=3
+                )
             )
         )
 
@@ -975,7 +1015,15 @@ def paper_research_agent(state: ResearchState):
         #   }
         # ]
 
-        papers = result if isinstance(result, list) else []
+        if isinstance(result, dict):
+            papers = result.get(
+                "results",
+                result.get("papers", [])
+            )
+        elif isinstance(result, list):
+            papers = result
+        else:
+            papers = []
 
         paper_results = []
 
@@ -1205,10 +1253,12 @@ def news_research_agent(
     try:
 
         # Get news articles from NewsAPI through MCP
-        result = run_async(
-            news_mcp_search(
-                query,
-                limit=3
+        result = _decode_tool_result(
+            run_async(
+                news_mcp_search(
+                    query,
+                    limit=3
+                )
             )
         )
 
@@ -1399,10 +1449,12 @@ def youtube_research_agent(state: ResearchState):
     try:
 
         # YouTube search + transcript
-        result = run_async(
-            youtube_mcp_search(
-                query,
-                limit=3
+        result = _decode_tool_result(
+            run_async(
+                youtube_mcp_search(
+                    query,
+                    limit=3
+                )
             )
         )
 

@@ -2367,8 +2367,6 @@ def run_research_agent(
         config=config,
     )
 
-    print(ResearchState["guardrail_allowed"])
-
     return _serialize_result(
         result,
         thread_id

@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { marked } from "marked";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://127.0.0.1:8000/api/research";
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = configuredApiUrl
+  ? `${configuredApiUrl.replace(/\/$/, "")}/api/research`.replace(
+      "/api/research/api/research",
+      "/api/research"
+    )
+  : "http://127.0.0.1:8000/api/research";
 const API_ROOT = API_URL.replace(/\/api\/research\/?$/, "");
 
 const QUICK_PROMPTS = [

@@ -759,7 +759,17 @@ def web_research_agent(state: ResearchState):
 
         research_data = []
 
-        for ans in result["results"]:
+        if isinstance(result, dict):
+            answers = result.get("results", [])
+        elif isinstance(result, list):
+            answers = result
+        else:
+            answers = []
+
+        for ans in answers:
+            if not isinstance(ans, dict):
+                continue
+
             content = ans.get("content", "")
 
             relevant_info = summarize_relevant_content(
@@ -965,11 +975,14 @@ def paper_research_agent(state: ResearchState):
         #   }
         # ]
 
-        papers = result
+        papers = result if isinstance(result, list) else []
 
         paper_results = []
 
         for paper in papers:
+
+            if not isinstance(paper, dict):
+                continue
 
             title = paper.get(
                 "title",
@@ -1201,11 +1214,19 @@ def news_research_agent(
 
         # result ko _prompt_text se truncate MAT karo
         # hume articles ke URLs chahiye
-        articles = result.get("articles", [])
+        if isinstance(result, dict):
+            articles = result.get("articles", [])
+        elif isinstance(result, list):
+            articles = result
+        else:
+            articles = []
 
         news_results = []
 
         for article in articles:
+
+            if not isinstance(article, dict):
+                continue
 
             title = article.get("title", "")
             url = article.get("url", "")

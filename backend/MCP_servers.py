@@ -10,7 +10,6 @@ mcp = FastMCP("Researchmcpserver")
 
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "").strip()
-print("news api key" , NEWS_API_KEY)
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "").strip()
 
 from tavily import TavilyClient
@@ -191,13 +190,8 @@ def paper_search(query: str, limit: int = 3):
 def news_search(query: str, limit: int = 3):
 
 
-    print("news api key" , NEWS_API_KEY)
-
     if not NEWS_API_KEY:
-        return "News search unavailable: NEWS_API_KEY is missing."
-
-
-    print("news api key" , NEWS_API_KEY)
+        return {"articles": []}
 
     url = "https://newsapi.org/v2/everything"
 
@@ -222,29 +216,20 @@ def news_search(query: str, limit: int = 3):
         )
 
         if not response.ok:
-            return (
-                "News search unavailable: "
-                f"HTTP {response.status_code} - "
-                f"{response.text[:300]}"
-            )
+            return {"articles": []}
 
         data = response.json()
 
     except requests.exceptions.RequestException as error:
         status = getattr(error.response, "status_code", "unknown")
-        return (
-            "News search unavailable: "
-            f"{type(error).__name__} (HTTP {status})."
-        )
+        return {"articles": []}
 
     except Exception as error:
-        return f"News search unavailable: {type(error).__name__}."
+        return {"articles": []}
 
     results = []
 
-    for i, article in enumerate(
-        data.get("articles", []), 1
-    ):
+    for article in data.get("articles", []):
 
         source = (
             article.get("source", {}).get("name")
@@ -275,18 +260,18 @@ def news_search(query: str, limit: int = 3):
                 + "..."
             )
 
-        results.append(
-            f"{i}. **{title}**\n"
-            f"Source: {source}\n"
-            f"Published: {published_at}\n"
-            f"URL: {url}\n"
-            f"Summary: {description}"
-        )
+        results.append({
+            "source": {"name": source},
+            "title": title,
+            "description": description,
+            "url": url,
+            "publishedAt": published_at,
+        })
 
     if not results:
-        return "No relevant news articles found."
+        return {"articles": []}
 
-    return "\n\n".join(results)
+    return {"articles": results}
 
 
 

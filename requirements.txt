@@ -30,3 +30,6 @@ mcp==1.28.1
 langchain-google-genai
 langchain-huggingface>=1.2.2
 youtube-transcript-api>=1.2.4
+trafilatura
+lxml_html_clean
+pypdf

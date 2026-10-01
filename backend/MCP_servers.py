@@ -1,15 +1,17 @@
 from mcp.server.fastmcp import FastMCP
 import requests
 import os
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
 
 mcp = FastMCP("Researchmcpserver")
 
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "").strip()
+print("news api key" , NEWS_API_KEY)
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "").strip()
 
 from tavily import TavilyClient
 
@@ -52,6 +54,7 @@ def web_search(query: str, max_results: int = 10):
             # The regular Tavily content is sufficient for research prompts.
             include_raw_content=False
         )
+        print("tavily response", response)
 
         results = []
 
@@ -118,17 +121,14 @@ def paper_search(query: str, limit: int = 5):
 
     except requests.exceptions.RequestException as error:
         status = getattr(error.response, "status_code", "unknown")
-        return (
-            "Paper search unavailable: "
-            f"{type(error).__name__} (HTTP {status})."
-        )
+        return []
 
     except Exception as error:
-        return f"Paper search unavailable: {type(error).__name__}."
+        return []
 
     results = []
 
-    for i, paper in enumerate(data.get("results", []), 1):
+    for paper in data.get("results", []):
 
         title = paper.get("display_name") or "Unknown title"
 
@@ -168,19 +168,19 @@ def paper_search(query: str, limit: int = 5):
         # Citation count
         citation_count = paper.get("cited_by_count", 0)
 
-        results.append(
-            f"{i}. **{title}**\n"
-            f"Authors: {author_names}\n"
-            f"Year: {year}\n"
-            f"Paper: {paper_url}\n"
-            f"PDF: {pdf_url}\n"
-            f"Citations: {citation_count}"
-        )
+        results.append({
+            "title": title,
+            "authors": author_names,
+            "year": year,
+            "paper_url": paper_url,
+            "pdf_url": pdf_url,
+            "citation_count": citation_count,
+        })
 
     if not results:
-        return "No relevant research papers found."
+        return []
 
-    return "\n\n".join(results)
+    return results
 
 
 # --------------------------------------------------
@@ -188,10 +188,16 @@ def paper_search(query: str, limit: int = 5):
 # --------------------------------------------------
 
 @mcp.tool()
-def news_search(query: str, limit: int = 5):
+def news_search(query: str, limit: int = 3):
+
+
+    print("news api key" , NEWS_API_KEY)
 
     if not NEWS_API_KEY:
         return "News search unavailable: NEWS_API_KEY is missing."
+
+
+    print("news api key" , NEWS_API_KEY)
 
     url = "https://newsapi.org/v2/everything"
 
@@ -301,7 +307,12 @@ def youtube_search(query: str, limit: int = 5):
         "key": YOUTUBE_API_KEY,
     }
 
-    response = requests.get(url, params=params, timeout=30)
+    response = requests.get(
+        url,
+        params=params,
+        timeout=30
+    )
+
     response.raise_for_status()
 
     videos = response.json().get("items", [])
@@ -317,24 +328,36 @@ def youtube_search(query: str, limit: int = 5):
         channel = video["snippet"]["channelTitle"]
 
         try:
-            if YouTubeTranscriptApi is None:
-                text = "Transcript unavailable: package not installed."
-            else:
-                transcript = YouTubeTranscriptApi().fetch(video_id)
 
-                text = " ".join(
+            if YouTubeTranscriptApi is None:
+                transcript_text = ""
+
+            else:
+                transcript = YouTubeTranscriptApi().fetch(
+                    video_id
+                )
+
+                transcript_text = " ".join(
                     snippet.text
                     for snippet in transcript
                 )
 
-        except Exception:
-            text = "Transcript unavailable."
+        except Exception as exc:
+
+            print(
+                f"Transcript unavailable for "
+                f"{video_id}: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+
+            transcript_text = ""
 
         results.append({
             "title": title,
             "channel": channel,
+            "video_id": video_id,
             "url": f"https://www.youtube.com/watch?v={video_id}",
-            "transcript": text[:10000]
+            "transcript": transcript_text
         })
 
     return results

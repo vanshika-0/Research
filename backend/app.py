@@ -14,8 +14,12 @@ try:
     # Package execution: uvicorn backend.app:app
     from .main import run_research_agent, resume_research_agent
 except ImportError:
-    # Direct execution: python backend/app.py
-    from main import run_research_agent, resume_research_agent
+    try:
+        # Project-root execution: uvicorn backend.app:app via a top-level import
+        from backend.main import run_research_agent, resume_research_agent
+    except ImportError:
+        # Direct execution from the backend directory: python app.py
+        from backend.main import run_research_agent, resume_research_agent
 
 
 load_dotenv()
@@ -48,7 +52,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=frontend_origins,
     # Supports Vercel production, preview, and branch deployment URLs.
-    allow_origin_regex=r"^https://.*\.vercel\.app$",
+    allow_origin_regex=(
+        r"^(https?://(localhost|127\.0\.0\.1)(:\d+)?"
+        r"|https://.*\.vercel\.app)$"
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -32,6 +32,9 @@ dependencies = [
     "langchain-google-genai>=4.4.0",
     "langchain-huggingface>=1.2.2",
     "youtube-transcript-api>=1.2.4",
+    "trafilatura",
+    "lxml-html-clean",
+    "pypdf",
 ]
 
 [project.scripts]

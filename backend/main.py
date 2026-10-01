@@ -1942,7 +1942,7 @@ def route_from_supervisor(state: ResearchState):
             "web_research_agent",
             "paper_research_agent",
             "news_research_agent",
-            # "youtube_research_agent",  # temporarily disabled
+            "youtube_research_agent",
         ]
         if agent in selected
     ]
@@ -1954,7 +1954,7 @@ def route_from_supervisor(state: ResearchState):
             "web_research_agent",
             "paper_research_agent",
             "news_research_agent",
-            # "youtube_research_agent",  # temporarily disabled
+            "youtube_research_agent",
         ]
 
     return [

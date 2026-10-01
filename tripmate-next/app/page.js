@@ -6,6 +6,7 @@ import { marked } from "marked";
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "http://127.0.0.1:8000/api/research";
+const API_ROOT = API_URL.replace(/\/api\/research\/?$/, "");
 
 const QUICK_PROMPTS = [
   "Impact of Artificial Intelligence on software development",
@@ -75,7 +76,7 @@ export default function Home() {
 
     try {
       const res = await fetch(
-        "http://127.0.0.1:8000/api/research/approve",
+        `${API_ROOT}/api/research/approve`,
         {
           method: "POST",
           headers: {

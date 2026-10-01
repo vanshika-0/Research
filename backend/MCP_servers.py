@@ -5,22 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-<<<<<<< HEAD:MCP_servers.py
-<<<<<<< HEAD
-mcp = FastMCP("Research MCP Server",
-=======
-mcp = FastMCP("Researchmcpserver",
->>>>>>> de12992 (Initial MCP server)
-              host="0.0.0.0",
-              # Hosting platforms provide PORT automatically. MCP_PORT
-              # remains available for local development.
-              port=int(os.getenv("PORT", os.getenv("MCP_PORT", "8001"))),
-              stateless_http=True,
-              json_response=True,
-              )
-=======
 mcp = FastMCP("Researchmcpserver")
->>>>>>> eb3003b (Organize backend package and update MCP setup):backend/MCP_servers.py
 
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
@@ -37,15 +22,12 @@ except ImportError:
 
 
 
-<<<<<<< HEAD
 
 
 
 
 
 
-=======
->>>>>>> de12992 (Initial MCP server)
 # --------------------------------------------------
 # 1. WEB SEARCH
 # --------------------------------------------------

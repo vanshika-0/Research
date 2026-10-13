@@ -53,7 +53,10 @@ def web_search(query: str, max_results: int = 1):
             # The regular Tavily content is sufficient for research prompts.
             include_raw_content=False
         )
-        print("tavily response", response)
+        # stdout is reserved for MCP JSON-RPC messages. Writing diagnostics
+        # there corrupts the stdio protocol and makes the client fail while
+        # parsing the next message.
+        print("tavily response", response, file=sys.stderr)
 
         results = []
 
